@@ -46,7 +46,7 @@ class SendingSchedule extends Model
 
     public function sendingsCustomers(): Relation
     {
-        $this->hasMany(SendingsCustomer::class);
+        return $this->hasMany(SendingsCustomer::class);
     }
 
     public function customers(): Relation

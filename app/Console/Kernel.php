@@ -12,30 +12,20 @@ class Kernel extends ConsoleKernel
      *
      * @var array
      */
-    protected $commands = [
-        //
-    ];
+    protected $commands = [];
 
-    /**
-     * Define the application's command schedule.
-     *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
-     * @return void
-     */
-    protected function schedule(Schedule $schedule)
+    /** Define the application's command schedule. */
+    protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->command('enqueue:sendings')
+            ->everyMinute()
+            ->withoutOverlapping()
+            ->sendOutputTo("storage/logs/enqueue-sendings.log", true);
     }
 
-    /**
-     * Register the commands for the application.
-     *
-     * @return void
-     */
-    protected function commands()
+    /** Register the commands for the application. */
+    protected function commands(): void
     {
-        $this->load(__DIR__.'/Commands');
-
-        require base_path('routes/console.php');
+        $this->load(__DIR__ . '/Commands');
     }
 }

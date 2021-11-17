@@ -19,7 +19,6 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('enqueue:sendings')
             ->everyMinute()
-            ->withoutOverlapping()
             ->sendOutputTo("storage/logs/enqueue-sendings.log", true);
     }
 

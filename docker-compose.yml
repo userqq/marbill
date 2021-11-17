@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: 1
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: marbill
+      MYSQL_PASSWORD: marbill
+  web:
+    build: ./docker/
+    restart: always
+    volumes: [./:/application/]
+    working_dir: /application
+    ports: [41337:80]
+    command: >
+      bash -c "composer install
+               php artisan migrate:install -q
+               php artisan migrate:fresh --seed
+               TERM=xterm watch -n 1 php artisan schedule:run > /dev/null 2>&1 &
+               TERM=xterm watch -n 1 php artisan queue:work > /dev/null 2>&1 &
+               php artisan serve --host 0.0.0.0 --port 80"
